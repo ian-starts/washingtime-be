@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  database:
+    image: kartoza/postgis:12.1
+    environment:
+      POSTGRES_USER: development
+      POSTGRES_PASS: secret
+      POSTGRES_DBNAME: development
+    ports:
+      - "5432:5432"
