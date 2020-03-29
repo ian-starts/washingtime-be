@@ -12,7 +12,7 @@ namespace WashingTime.Infrastructure
         {
         }
 
-        public DbSet<Entities.WashingTime.WashingTime> Books { get; set; }
+        public DbSet<Entities.WashingTime.WashingTime> WashingTimes { get; set; }
         
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

@@ -10,7 +10,7 @@ using WashingTime.Infrastructure;
 namespace WashingTime.Migrations
 {
     [DbContext(typeof(WashingTimeContext))]
-    [Migration("20200328115553_InitialCreate")]
+    [Migration("20200329161519_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,15 +27,18 @@ namespace WashingTime.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<DateTime>("EndDateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("WashingTimes");
                 });
 #pragma warning restore 612, 618
         }

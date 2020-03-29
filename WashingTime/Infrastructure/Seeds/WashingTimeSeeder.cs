@@ -17,9 +17,9 @@ namespace WashingTime.Infrastructure.Seeds
 
         public void Seed()
         {
-            if (!_context.Books.AsQueryable().Any())
+            if (!_context.WashingTimes.AsQueryable().Any())
             {
-                _context.Books.AddRange(_washingTimeFaker.Generate(20));
+                _context.WashingTimes.AddRange(_washingTimeFaker.Generate(20));
             }
 
             _context.SaveEntitiesAsync().Wait();

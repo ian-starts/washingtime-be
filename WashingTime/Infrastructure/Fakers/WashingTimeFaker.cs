@@ -11,8 +11,9 @@ namespace WashingTime.Infrastructure.Fakers
             {
                 return new Entities.WashingTime.WashingTime()
                 {
-                    UserId = new Guid(),
-                    DateTime = new DateTime()
+                    UserId = "asjdhasjkdbn",
+                    StartDateTime = new DateTime(),
+                    EndDateTime = new DateTime()
                 };
             });
         }

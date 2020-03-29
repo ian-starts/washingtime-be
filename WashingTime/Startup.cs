@@ -1,13 +1,16 @@
 using System.Reflection;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using WashingTime.Exceptions.ExceptionFilters;
+using WashingTime.Identity.Dummy;
 using WashingTime.Infrastructure;
 using WashingTime.Infrastructure.Repositories;
 using WashingTime.Mapping.Profiles;
@@ -66,6 +69,30 @@ namespace WashingTime
                         .WithScopedLifetime();
                 });
             services.AddSwaggerDocument(settings => settings.Title = "WashingTime Club API");
+            if (Configuration.GetValue<bool>("Authentication:UseDummy"))
+            {
+                services.AddAuthentication(DummyAuthenticationOptions.Scheme)
+                    .AddTestAuth(options => options.Identity = new DummyUser());
+            }
+            else
+            {
+                services
+                    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(
+                        options =>
+                        {
+                            options.Authority = Configuration.GetValue<string>("Authentication:IssueUrl");
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidIssuer = Configuration.GetValue<string>("Authentication:IssueUrl"),
+                                ValidateAudience = true,
+                                ValidAudience = Configuration.GetValue<string>("Authentication:ProjectName"),
+                                ValidateLifetime = true
+                            };
+                        });
+                services.AddAuthorization();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,8 +113,8 @@ namespace WashingTime
                 });
             app.UseOpenApi();
             app.UseSwaggerUi3();
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

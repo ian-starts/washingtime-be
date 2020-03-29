@@ -7,8 +7,10 @@ namespace WashingTime.Entities.WashingTime
     {
         public Guid Id { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public DateTime StartDateTime { get; set; }
+        
+        public DateTime EndDateTime { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
     }
 }
