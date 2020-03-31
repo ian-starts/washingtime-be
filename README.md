@@ -1,4 +1,4 @@
-# Backend of heldnodig
+# Backend of WannaWash.nl
 
 ## Getting Started
 
