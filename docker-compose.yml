@@ -12,11 +12,38 @@ services:
       CONFIG_Database__PostgresSQL__ConnectionString: Host=database;Database=development;Username=development;Password=secret;
     ports:
       - "8080:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.web.rule=Host(`api.wannawash.nl`)"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.middlewares=redirect"
+      - "traefik.http.routers.web-secured.rule=Host(`api.wannawash.nl`)"
+      - "traefik.http.routers.web-secured.entrypoints=websecure"
+      - "traefik.http.routers.web-secured.tls.certresolver=myhttpchallenge"
+  traefik:
+    image: traefik
+    container_name: traefik
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myhttpchallenge.acme.email=hello@iankok.com"
+      - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   database:
     image: kartoza/postgis:12.1
     environment:
       POSTGRES_USER: development
       POSTGRES_PASS: secret
       POSTGRES_DBNAME: development
-    ports:
-      - "5432:5432"
+volumes:
+  letsencrypt:
