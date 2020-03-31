@@ -10,7 +10,7 @@ using WashingTime.Infrastructure;
 namespace WashingTime.Migrations
 {
     [DbContext(typeof(WashingTimeContext))]
-    [Migration("20200329161519_InitialCreate")]
+    [Migration("20200331084018_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,13 @@ namespace WashingTime.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
+                    b.Property<int>("WasherType")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StartDateTime", "EndDateTime", "WasherType")
+                        .IsUnique();
 
                     b.ToTable("WashingTimes");
                 });

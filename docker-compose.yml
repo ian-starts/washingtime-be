@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+  washingtime.api:
+    image: yik.dev/washingtime-be
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      CONFIG_Authentication__UseDummy: "false"
+      CONFIG_Authentication__IssueUrl: ""
+      CONFIG_Authentication__ProjectName: ""
+      CONFIG_Database__Seed: "false"
+      CONFIG_Database__PostgresSQL__ConnectionString: Host=database;Database=development;Username=development;Password=secret;
+    ports:
+      - "8080:80"
   database:
     image: kartoza/postgis:12.1
     environment:

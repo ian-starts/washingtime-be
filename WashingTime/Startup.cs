@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using WashingTime.Exceptions.ExceptionFilters;
+using WashingTime.Identity;
 using WashingTime.Identity.Dummy;
 using WashingTime.Infrastructure;
 using WashingTime.Infrastructure.Repositories;
@@ -69,6 +71,8 @@ namespace WashingTime
                         .WithScopedLifetime();
                 });
             services.AddSwaggerDocument(settings => settings.Title = "WashingTime Club API");
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityAccessor, IdentityAccessor>();
             if (Configuration.GetValue<bool>("Authentication:UseDummy"))
             {
                 services.AddAuthentication(DummyAuthenticationOptions.Scheme)
@@ -91,8 +95,8 @@ namespace WashingTime
                                 ValidateLifetime = true
                             };
                         });
-                services.AddAuthorization();
             }
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

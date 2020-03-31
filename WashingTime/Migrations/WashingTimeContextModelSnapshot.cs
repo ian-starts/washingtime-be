@@ -34,7 +34,13 @@ namespace WashingTime.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
+                    b.Property<int>("WasherType")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StartDateTime", "EndDateTime", "WasherType")
+                        .IsUnique();
 
                     b.ToTable("WashingTimes");
                 });
